@@ -12,6 +12,14 @@ app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/link', require('./routes/link.routes'))
 app.use('/t', require('./routes/redirect.routes'))
 
+if (process.env.NODE_ENV === 'production') {   //если продакшен отдаем статику
+app.use('/', express.static(path.join(__dirname, 'client', 'build'))) //путь для статики тек дир - клиент-билт
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')) // на любой гет запрос путь до файла индекс хтмл
+})
+}
+
 const PORT = config.get('port') || 5000
 
 async function start() {
